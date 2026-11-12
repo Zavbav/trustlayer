@@ -23,6 +23,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}.shell{display:g
 <button data-view="scanner"><span class="ico">⌕</span>Response scanner</button>
 <button data-view="policies"><span class="ico">▤</span>Company policies</button>
 <button data-view="history"><span class="ico">◷</span>Scan history</button>
+<button data-view="founder" id="founderNav" class="hidden"><span class="ico">✦</span>Founder console</button>
 </nav></div>
 <div class="sidebottom"><div class="plan"><b>TrustLayer Starter</b><p>Rule-based checks with private workspace storage.</p><span class="tag green">ACTIVE</span></div><p class="tiny" style="padding:10px 4px">Built to help teams review before they send.</p></div>
 </aside>
@@ -40,6 +41,39 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}.shell{display:g
 <div class="row between" style="margin-top:13px"><span class="tiny">Text is checked in your browser and is not saved.</span><button class="btn primary" id="quickScan">Check response</button></div>
 <div id="quickResult"></div></div>
 <div class="card"><div class="cardhead"><div><h2>Recent activity</h2><p class="sub">Only scan metadata is saved.</p></div><button class="btn ghost" data-goto="history">View all</button></div><div class="list" id="recentList"><div class="empty">No scans yet. Run your first response check.</div></div></div>
+</div>
+<div class="card" id="founderActivateCard" style="margin-top:16px">
+<div class="cardhead"><div><h2>Founder access</h2><p class="sub">Activate the private founder console with your one-time access code.</p></div><span class="tag">PRIVATE</span></div>
+<div class="field"><label for="founderCode">Founder access code</label><input id="founderCode" type="password" autocomplete="off" placeholder="Enter your founder code"></div>
+<div class="row between"><span class="tiny">This code is redeemed once and attached to your signed-in account.</span><button class="btn primary" id="activateFounder">Activate Founder Mode</button></div>
+<div class="notice" id="founderNotice" role="status"></div>
+</div>
+</section>
+<section class="view" id="founder">
+<div class="card" style="margin-bottom:16px">
+<div class="cardhead"><div><div class="eyebrow">Private founder area</div><h2>Founder command center</h2><p class="sub">Internal product visibility for the person building TrustLayer.</p></div><span class="tag green">FOUNDER ACTIVE</span></div>
+<p class="sub">These are live totals from the TrustLayer database. They are product activity counts, not revenue or customer-validation claims.</p>
+</div>
+<div class="grid stats">
+<div class="card"><div class="statlabel">Workspaces</div><div class="statnum" id="founderWorkspaces">—</div><div class="statnote">Created in TrustLayer</div></div>
+<div class="card"><div class="statlabel">Members</div><div class="statnum" id="founderMembers">—</div><div class="statnote">Workspace memberships</div></div>
+<div class="card"><div class="statlabel">Scans recorded</div><div class="statnum" id="founderScans">—</div><div class="statnote">Saved scan summaries</div></div>
+</div>
+<div class="grid dashboardgrid">
+<div class="card"><div class="cardhead"><div><h2>Founder feature lab</h2><p class="sub">A private space for testing new product ideas.</p></div><span class="tag amber">EXPERIMENTAL</span></div>
+<div class="list">
+<div class="listitem"><div><b>Policy intelligence</b><p>Plan richer policy matching beyond literal phrases.</p></div><span class="tag">PLANNED</span></div>
+<div class="listitem"><div><b>Risk review profiles</b><p>Explore different review settings for different business teams.</p></div><span class="tag">PLANNED</span></div>
+<div class="listitem"><div><b>Team activity insights</b><p>See how workspaces use scans and saved policies.</p></div><span class="tag green">BASIC METRICS LIVE</span></div>
+</div></div>
+<div class="card"><div class="cardhead"><div><h2>Founder controls</h2><p class="sub">Private product administration.</p></div></div>
+<div class="list">
+<div class="listitem"><div><b>Founder privileges</b><p>Access is attached to your authenticated account.</p></div><span class="tag green">ENABLED</span></div>
+<div class="listitem"><div><b>Customer data protection</b><p>Metrics show totals only; no customer draft text is exposed.</p></div><span class="tag green">ON</span></div>
+</div>
+<button class="btn ghost" id="refreshFounder" style="margin-top:14px">Refresh founder metrics</button>
+<div class="notice" id="founderMetricsNotice" role="status"></div>
+</div>
 </div>
 </section>
 <section class="view" id="scanner">
@@ -74,7 +108,7 @@ $("modeSignIn").onclick=()=>setAuthMode("signin");$("modeSignUp").onclick=()=>se
 $("authSubmit").onclick=async()=>{const email=$("email").value.trim(),password=$("password").value,workspace=$("orgName").value.trim();if(authMode!=="workspace"&&(!email||password.length<8)){setNotice("Enter a valid email and a password with at least 8 characters.");return}if(authMode==="signup"&&!workspace){setNotice("Add a workspace name to continue.");return}const btn=$("authSubmit");btn.disabled=true;btn.textContent="Please wait…";try{if(authMode==="workspace"){if(!currentUser)throw new Error("Please sign in again.");await createWorkspace(workspace)}else if(authMode==="signup"){const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin}});if(error)throw error;if(!data.session){setNotice("Check your email to confirm your account, then sign in. You can create your workspace after confirmation.");return}currentUser=data.user;await createWorkspace(workspace)}else{const {data,error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;currentUser=data.user;await enterWorkspace()}}catch(e){setNotice(e.message||"Unable to complete sign-in.")}finally{btn.disabled=false;btn.textContent=authMode==="signin"?"Sign in":"Create account"}};
 async function createWorkspace(name){const {data,error}=await supabase.from("organizations").insert({name,owner_id:currentUser.id}).select("id").single();if(error)throw error;orgId=data.id;await loadWorkspace();$("authWrap").classList.add("hidden")}
 async function enterWorkspace(){const {data:members,error}=await supabase.from("organization_members").select("organization_id").eq("user_id",currentUser.id).limit(1);if(error)throw error;if(!members?.length){authMode="workspace";$("authTitle").textContent="Create your workspace";$("authDesc").textContent="Your account is ready. Add a company or workspace name to finish setup.";$("orgField").style.display="grid";$("email").parentElement.style.display="none";$("password").parentElement.style.display="none";$("authswitch").style.display="none";$("authSubmit").textContent="Create workspace";setNotice("No workspace is linked to this account yet.");return}orgId=members[0].organization_id;await loadWorkspace();$("authWrap").classList.add("hidden")}
-async function loadWorkspace(){ $("userEmail").textContent=currentUser.email||"Workspace member";const [p,h]=await Promise.all([supabase.from("company_policies").select("*").eq("organization_id",orgId).order("created_at",{ascending:false}),supabase.from("scan_history").select("*").eq("organization_id",orgId).order("created_at",{ascending:false}).limit(50)]);if(p.error)throw p.error;if(h.error)throw h.error;policies=p.data||[];history=h.data||[];renderAll()}
+async function loadWorkspace(){ $("userEmail").textContent=currentUser.email||"Workspace member";const [p,h]=await Promise.all([supabase.from("company_policies").select("*").eq("organization_id",orgId).order("created_at",{ascending:false}),supabase.from("scan_history").select("*").eq("organization_id",orgId).order("created_at",{ascending:false}).limit(50)]);if(p.error)throw p.error;if(h.error)throw h.error;policies=p.data||[];history=h.data||[];renderAll();await loadFounderAccess()}
 supabase.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"||!session){currentUser=null;orgId=null;$("authWrap").classList.remove("hidden")}});
 supabase.auth.getSession().then(async({data})=>{if(data.session){currentUser=data.session.user;try{await enterWorkspace()}catch(e){setNotice(e.message)}}});
 $("signOut").onclick=async()=>{await supabase.auth.signOut();location.reload()};
@@ -86,8 +120,41 @@ $("addPolicy").onclick=async()=>{const title=$("policyTitle").value.trim(),phras
 async function deletePolicy(id){if(!confirm("Delete this policy phrase?"))return;const {error}=await supabase.from("company_policies").delete().eq("id",id);if(error)return alert(error.message);policies=policies.filter(p=>p.id!==id);renderAll()}
 function renderPolicies(){$("policyCount").textContent=policies.length+" RULES";$("statPolicies").textContent=policies.filter(p=>p.enabled).length;$("policyList").innerHTML=policies.length?policies.map(p=>'<div class="listitem"><div><b>'+escapeHtml(p.title)+'</b><p>Matches: '+escapeHtml(p.phrase)+'</p></div><button class="btn danger" data-delete="'+p.id+'">Delete</button></div>').join(""):'<div class="empty">No custom policy phrases yet. Add one to tailor checks to your team.</div>';$("policyList").querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deletePolicy(b.dataset.delete))}
 function renderHistory(){$("statScans").textContent=history.length;$("statFlags").textContent=history.reduce((n,x)=>n+(x.flagged_count||0),0);const item=h=>'<div class="listitem"><div><b>'+Number(h.flagged_count||0)+' item(s) flagged</b><p>'+new Date(h.created_at).toLocaleString()+' · '+escapeHtml((h.categories||[]).join(", ")||"No categories")+'</p></div><span class="tag '+(h.flagged_count?"amber":"green")+'">'+(h.flagged_count?"REVIEW":"CLEAR")+'</span></div>';$("historyList").innerHTML=history.length?history.map(item).join(""):'<div class="empty">No scan records yet. Your first scan summary will appear here.</div>';$("recentList").innerHTML=history.length?history.slice(0,4).map(item).join(""):'<div class="empty">No scans yet. Run your first response check.</div>'}
+let isFounder=false;
+async function loadFounderAccess(){
+ const {data,error}=await supabase.from("founder_accounts").select("user_id").eq("user_id",currentUser.id).maybeSingle();
+ if(error)throw error;
+ isFounder=!!data;
+ $("founderNav").classList.toggle("hidden",!isFounder);
+ $("founderActivateCard").classList.toggle("hidden",isFounder);
+ if(isFounder)await refreshFounderMetrics();
+}
+async function refreshFounderMetrics(){
+ if(!isFounder)return;
+ const {data,error}=await supabase.rpc("get_founder_metrics");
+ if(error){$("founderMetricsNotice").textContent=error.message;return}
+ $("founderWorkspaces").textContent=data.workspaces??0;
+ $("founderMembers").textContent=data.members??0;
+ $("founderScans").textContent=data.scans??0;
+ $("founderMetricsNotice").textContent="Metrics updated.";
+}
+$("activateFounder").onclick=async()=>{
+ const code=$("founderCode").value.trim(),btn=$("activateFounder");
+ if(!code){$("founderNotice").textContent="Enter your founder access code.";return}
+ btn.disabled=true;btn.textContent="Activating…";
+ try{
+  const {error}=await supabase.rpc("claim_founder_access",{p_code:code});
+  if(error)throw error;
+  $("founderCode").value="";
+  $("founderNotice").textContent="Founder Mode activated for this account.";
+  await loadFounderAccess();
+  showView("founder");
+ }catch(e){$("founderNotice").textContent=e.message||"Could not activate Founder Mode."}
+ finally{btn.disabled=false;btn.textContent="Activate Founder Mode"}
+};
+$("refreshFounder").onclick=refreshFounderMetrics;
 function renderAll(){renderPolicies();renderHistory()}
-function showView(name){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));const titles={overview:"Workspace overview",scanner:"Response scanner",policies:"Company policies",history:"Scan history"};$("pageTitle").textContent=titles[name]||"Workspace";window.scrollTo({top:0,behavior:"smooth"})}
+function showView(name){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));const titles={overview:"Workspace overview",scanner:"Response scanner",policies:"Company policies",history:"Scan history",founder:"Founder command center"};$("pageTitle").textContent=titles[name]||"Workspace";window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.goto)));$("refreshHistory").onclick=async()=>{const {data,error}=await supabase.from("scan_history").select("*").eq("organization_id",orgId).order("created_at",{ascending:false}).limit(50);if(error)return alert(error.message);history=data||[];renderHistory()};
 </script>
 </body></html>
