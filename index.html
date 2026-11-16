@@ -204,7 +204,7 @@ async function exportCurrentReport(){
 }
 async function runScan(text,target,question=""){
  if(!text.trim()){target.innerHTML='<div class="result warn">Paste the proposed reply first.</div>';return}
- const flags=classify(text);lastReport={flags,created_at:new Date().toISOString()};target.innerHTML=resultMarkup(flags);
+ const flags=classify(text);const q=String(question||"").toLowerCase();if(/refund|return|cancel|money back/.test(q))flags.filter(x=>x.category==="Refund commitment").forEach(x=>x.why+=" The customer is specifically asking about a refund or return, so confirm eligibility before making this promise.");if(/deliver|delivery|arrive|shipping|shipment|tracking/.test(q))flags.filter(x=>x.category==="Delivery commitment").forEach(x=>x.why+=" The customer is asking about delivery, so verify the carrier estimate before promising a date.");if(/discount|coupon|promo|price/.test(q))flags.filter(x=>x.category==="Discount commitment").forEach(x=>x.why+=" The customer is asking about price or a promotion, so confirm authorization before offering a discount.");lastReport={flags,created_at:new Date().toISOString()};target.innerHTML=resultMarkup(flags);
  target.querySelectorAll("#exportReport,#exportReport2").forEach(b=>b.onclick=exportCurrentReport);
  const copyButton=target.querySelector("#copySafeReply");if(copyButton)copyButton.onclick=async()=>{try{await navigator.clipboard.writeText(makeCautiousReply());copyButton.textContent="Copied"}catch(e){copyButton.textContent="Select and copy the text above"}};
  if(!currentUser||!orgId){history.unshift({flagged_count:flags.length,categories:[...new Set(flags.map(f=>f.category))],created_at:new Date().toISOString()});history=history.slice(0,20);renderAll()}
