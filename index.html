@@ -240,7 +240,7 @@ async function addPolicyKit(name){
  const fresh=kit.filter(x=>!existing.has(x[1].toLowerCase()));
  if(!fresh.length){$("kitNotice").textContent="Those starter rules are already in this workspace.";return}
  if(currentUser&&orgId){
-  const rows=fresh.map(x=>({organization_id:orgId,user_id:currentUser.id,title:x[0],phrase:x[1],enabled:true}));
+  const rows=fresh.map(x=>({organization_id:orgId,title:x[0],phrase:x[1],created_by:currentUser.id}));
   const {data,error}=await supabase.from("company_policies").insert(rows).select();
   if(error){$("kitNotice").textContent="Could not add this kit: "+error.message;return}
   policies=[...data,...policies];
