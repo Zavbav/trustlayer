@@ -62,6 +62,7 @@ body{background:radial-gradient(ellipse at 88% 0%,rgba(91,115,239,.10),transpare
 
 .scenario-library,.policy-kits{margin:16px 0;padding:14px;border:1px solid var(--line);background:#0b1726;border-radius:12px}.scenario-library b,.policy-kits b{font-size:13px}.scenario-buttons,.kit-grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.scenario-buttons .btn,.kit-grid .btn{font-size:11px;padding:8px 10px}.policy-kits{margin-top:17px}.review-checklist{margin-top:16px;padding:14px;border:1px solid var(--line);background:#0b1726;border-radius:12px}.review-checklist h3{font-size:13px;margin:0 0 9px}.review-checklist label{display:flex;align-items:flex-start;gap:9px;color:#b6c5d9;font-size:12px;margin:9px 0}.review-checklist input{accent-color:#54dfd0;margin-top:2px}.review-checklist .tiny{margin-top:10px}
 .suite-panel{margin:16px 0;padding:16px;border:1px solid #315071;background:linear-gradient(135deg,#132943,#0c1929);border-radius:13px}.suite-panel .row{align-items:center}.suite-results{display:grid;gap:8px;margin-top:14px}.suite-result{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);background:#0b1726;border-radius:9px}.suite-result b{font-size:12px}.suite-result small{display:block;color:var(--muted);font-size:11px}.suite-summary{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}.suite-metric{padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:#0b1726;font-size:12px}.suite-metric strong{font-size:17px;margin-right:5px}.suite-result .tag{white-space:nowrap}
+.custom-test-builder{margin-top:16px;padding:15px;border:1px solid var(--line);border-radius:12px;background:#0a1523}.custom-test-builder .field{margin-top:10px}.custom-test-builder .textarea{min-height:65px}.custom-test-builder .suite-result{align-items:flex-start}.custom-test-builder .suite-result .btn{padding:6px 9px;font-size:10px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 </head>
@@ -149,6 +150,7 @@ body{background:radial-gradient(ellipse at 88% 0%,rgba(91,115,239,.10),transpare
  <div class="row" style="margin-top:12px"><button class="btn primary" id="runTestSuite">Run all sample tests</button><span class="tiny">Practice results stay in this browser and are not added to workspace history.</span></div>
  <div id="suiteResult" aria-live="polite"></div>
 </div>
+<div class="custom-test-builder"><div class="row between"><div><b>Build your own test cases</b><p class="tiny">Create a fictional customer question and proposed reply to test your own wording.</p></div><span class="tag">CUSTOM TESTS</span></div><div class="field"><label for="customTestName">Test name</label><input id="customTestName" maxlength="70" placeholder="Example: Cancellation promise"></div><div class="field"><label for="customTestQuestion">Customer question</label><textarea class="textarea" id="customTestQuestion" rows="2" placeholder="Write a fictional customer question..."></textarea></div><div class="field"><label for="customTestReply">Proposed reply</label><textarea class="textarea" id="customTestReply" rows="3" placeholder="Write the reply you want to check..."></textarea></div><div class="row between"><span class="tiny">Custom tests are temporary and clear when this page is refreshed.</span><button class="btn ghost" id="addCustomTest">Add test case</button></div><div id="customTestList" class="suite-results"></div><div class="notice" id="customTestNotice" role="status"></div></div>
 <div class="field"><label for="customerQuestion">Customer question <span class="muted">(optional context)</span></label><textarea class="textarea" id="customerQuestion" style="min-height:90px" placeholder="Example: Can you guarantee my order will arrive tomorrow?"></textarea></div><div class="field"><label for="scanText">AI-proposed reply</label><textarea class="textarea" id="scanText" placeholder="Paste the reply you want to test..."></textarea></div><div class="row" style="margin-top:9px"><button class="btn ghost" id="loadScannerExample">Load sample text</button><button class="btn ghost" id="clearScanner">Clear draft</button></div>
 <div class="row between" style="margin-top:13px"><span class="tiny">Do not paste passwords, payment details, or real personal information.</span><button class="btn primary" id="runScan">Analyze response</button></div>
 <div id="scanResult"></div></div>
@@ -242,8 +244,35 @@ const sampleScenarios={
  account:{question:"I cannot sign in. Should I send you my password so you can check?",reply:"Please send your password and access token so I can log in and fix this for you."}
 };
 let suiteReport=[];
+let customTests=[];
+function renderCustomTests(){
+ const el=$("customTestList");
+ el.innerHTML=customTests.length?customTests.map(t=>'<div class="suite-result"><div><b>'+escapeHtml(t.name)+'</b><small>'+escapeHtml(t.question.slice(0,105))+'</small></div><button class="btn danger" data-remove-custom="'+t.id+'">Remove</button></div>').join(""):'<p class="tiny">No custom test cases added yet.</p>';
+ el.querySelectorAll("[data-remove-custom]").forEach(b=>b.addEventListener("click",()=>{customTests=customTests.filter(t=>String(t.id)!==b.dataset.removeCustom);renderCustomTests();$("customTestNotice").textContent="Test case removed.";}));
+ $("runTestSuite").textContent="Run all "+(Object.keys(sampleScenarios).length+customTests.length)+" tests";
+}
+$("addCustomTest").onclick=()=>{
+ const name=$("customTestName").value.trim();
+ const question=$("customTestQuestion").value.trim();
+ const reply=$("customTestReply").value.trim();
+ if(!name||!question||!reply){$("customTestNotice").textContent="Add a name, customer question, and proposed reply first.";return;}
+ if(customTests.length>=20){$("customTestNotice").textContent="You can add up to 20 custom cases in one session.";return;}
+ customTests.push({id:String(Date.now())+String(customTests.length),name:name,question:question,reply:reply});
+ $("customTestName").value="";$("customTestQuestion").value="";$("customTestReply").value="";
+ $("customTestNotice").textContent="Custom test added. It will be included in the next full test run.";
+ renderCustomTests();
+};
 function runPracticeSuite(){
- const entries=Object.entries(sampleScenarios);
+ const entries=Object.entries(sampleScenarios).map(function(pair){return {name:({shipping:"Late delivery",refund:"Refund request",discount:"Discount request",account:"Account access"})[pair[0]],question:pair[1].question,reply:pair[1].reply};});
+ customTests.forEach(function(t){entries.push({name:t.name,question:t.question,reply:t.reply});});
+ suiteReport=entries.map(function(s){
+  const flags=classify(s.reply);
+  const q=s.question.toLowerCase();
+  if(/refund|return|cancel|money back/.test(q))flags.filter(x=>x.category==="Refund commitment").forEach(x=>x.why+=" Customer context asks about a refund or return.");
+  if(/deliver|delivery|arrive|shipping|shipment|tracking/.test(q))flags.filter(x=>x.category==="Delivery commitment").forEach(x=>x.why+=" Customer context asks about delivery.");
+  if(/discount|coupon|promo|price/.test(q))flags.filter(x=>x.category==="Discount commitment").forEach(x=>x.why+=" Customer context asks about price or a promotion.");
+  return {name:s.name,flags:flags};
+ });
  suiteReport=entries.map(([key,s])=>{
   const flags=classify(s.reply);
   const q=s.question.toLowerCase();
@@ -265,6 +294,7 @@ function downloadSuiteReport(){
  const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="trustlayer-practice-suite.txt";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
 $("runTestSuite").onclick=runPracticeSuite;
+renderCustomTests();
 async function addPolicyKit(name){
  const kit=policyKits[name];if(!kit)return;
  const existing=new Set(policies.map(p=>(p.phrase||"").toLowerCase()));
