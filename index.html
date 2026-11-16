@@ -17,7 +17,46 @@ body{background:#f3f6fb;color:#14243a}.shell{grid-template-columns:252px 1fr}.si
 .hero{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;min-height:320px;padding:36px 42px;overflow:hidden;position:relative;background:linear-gradient(115deg,#fff 0%,#f5f8ff 60%,#edf7f7 100%);margin-bottom:18px}.hero-copy{position:relative;z-index:2;max-width:590px}.hero h2{font-size:clamp(30px,4vw,48px);line-height:1.07;letter-spacing:-2px;margin:17px 0 13px;color:#14243a}.hero h2 em{font-style:normal;color:#315fdb}.hero-copy>p{font-size:15px;line-height:1.7;color:#64758d;max-width:520px;margin:0}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.hero-note{display:flex;align-items:center;gap:8px;color:#718198;font-size:11px;margin-top:20px}.pulse,.status-dot{width:8px;height:8px;border-radius:50%;background:#1ca77a;box-shadow:0 0 0 4px #1ca77a18}.hero-visual{height:250px;position:relative;display:grid;place-items:center}.visual-window{position:relative;z-index:2;width:min(310px,85%);background:#fff;border:1px solid #dce5ef;border-radius:16px;box-shadow:0 22px 55px #29456820;transform:rotate(2deg);overflow:hidden}.window-top{height:38px;border-bottom:1px solid #edf1f6;display:flex;align-items:center;gap:5px;padding:0 13px}.window-top>span{width:7px;height:7px;border-radius:50%;background:#d4dce7}.window-top b{font-size:9px;letter-spacing:1.2px;color:#8391a5;margin-left:9px}.visual-lines{padding:20px 18px 13px}.line{height:7px;background:#e9eef5;border-radius:8px;margin:0 0 10px;width:100%}.line.short{width:42%}.line.medium{width:72%}.review-chip{display:flex;align-items:center;gap:10px;padding:11px;background:#fff7e9;border:1px solid #f0dfbd;border-radius:10px;margin:14px 0}.review-icon{width:25px;height:25px;border-radius:8px;background:#f5dcae;color:#885810;display:grid;place-items:center;font-weight:900}.review-chip b{display:block;color:#694915;font-size:11px}.review-chip small{display:block;color:#9b7b48;font-size:10px;margin-top:2px}.visual-status{display:flex;align-items:center;gap:8px;padding:11px 17px;background:#f7fafc;border-top:1px solid #edf1f6;color:#64758b;font-size:10px}.orbit{position:absolute;border:1px solid #c9d8ee;border-radius:50%;width:250px;height:250px}.orbit-one{transform:scale(1.25)}.orbit-two{transform:scale(1.65);opacity:.5}.howto{margin:26px 0 22px}.howto-heading{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:13px}.howto-heading h2{font-size:21px;letter-spacing:-.6px;margin:4px 0 0}.howto-heading>p{font-size:12px;color:#7b8ba0;margin:0}.howto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.howto-step{display:flex;gap:13px;padding:17px;background:#fff;border:1px solid #e1e8f0;border-radius:13px}.step-number{font-size:12px;font-weight:850;color:#315fdb;letter-spacing:1px}.howto-step b{font-size:13px;color:#1c304c}.howto-step p{font-size:11px;line-height:1.55;color:#75859a;margin:5px 0 0}.scan-card .cardhead{align-items:end}.scan-card .textarea{min-height:170px}.scanner-intro{margin-bottom:14px}.scanner-intro h2{font-size:25px;letter-spacing:-.7px;margin:7px 0}.scanner-intro>p{max-width:760px;line-height:1.7}.scanner-steps{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.scanner-steps span{display:flex;align-items:center;gap:7px;color:#596b83;font-size:11px}.scanner-steps b{width:22px;height:22px;border-radius:50%;background:#edf2ff;color:#315fdb;display:grid;place-items:center}
 @media(max-width:850px){.hero{grid-template-columns:1fr;padding:26px}.hero-visual{height:210px;margin-top:10px}.howto-grid{grid-template-columns:1fr}.howto-heading{align-items:start;flex-direction:column}.howto-heading>p{margin-top:-8px}}
 @media(max-width:480px){.hero{padding:22px}.hero h2{font-size:31px}.hero-visual{height:190px}.hero-actions .btn{width:100%}.howto-step{padding:14px}.topright .btn{padding:9px 11px}}
-</style>
+/* TrustLayer clarity + visual system refresh */
+:root{--bg:#f4f6fb;--line:#e1e6f0;--blue:#405fe7;--cyan:#12a99a;--shadow:0 14px 40px rgba(24,39,75,.075)}
+body{background:radial-gradient(ellipse at 88% 0%,rgba(91,115,239,.10),transparent 34%),#f4f6fb;color:#17243b}
+.sidebar{background:linear-gradient(180deg,#101d35 0%,#172b49 100%);box-shadow:8px 0 32px rgba(16,29,53,.08)}
+.mark{border-radius:12px;background:linear-gradient(145deg,#9db7ff,#65e0cf);box-shadow:0 8px 24px rgba(89,177,220,.28)}
+.nav button{border-radius:12px;padding:12px 13px;font-weight:600}
+.nav button.active{background:linear-gradient(100deg,#294a79,#203a60);border-color:#45648e;box-shadow:inset 3px 0 #75dfd1}
+.main{max-width:1560px;padding-top:38px}.top{margin-bottom:30px}.top h1{font-size:clamp(27px,3.1vw,36px);letter-spacing:-1.3px}
+.card{border-radius:19px;box-shadow:0 12px 34px rgba(29,48,84,.055);transition:box-shadow .18s,border-color .18s}
+.card:hover{box-shadow:0 16px 38px rgba(29,48,84,.085)}
+.hero{border:1px solid #dce5f5;background:linear-gradient(112deg,#fff 0%,#f3f6ff 58%,#e9f8f6 100%);border-radius:24px;min-height:340px}
+.hero h2{letter-spacing:-2.2px;line-height:1.03}.hero-visual .visual-window{box-shadow:0 28px 70px rgba(31,54,96,.17);transform:rotate(1deg)}
+.btn{border-radius:11px;min-height:41px}.btn.primary{background:linear-gradient(110deg,#405fe7,#258fba);box-shadow:0 8px 20px rgba(64,95,231,.20)}
+.btn.primary:hover{background:linear-gradient(110deg,#314ed0,#177caa)}
+.textarea{min-height:230px;border-radius:14px;background:#fbfcff;border-color:#d9e1ee;line-height:1.65}
+.result{border-radius:14px}.flag{border-radius:11px}.howto-step{border-radius:15px;box-shadow:0 7px 20px rgba(31,54,96,.035)}
+.howto-step:hover,.guide-card:hover{transform:translateY(-2px);border-color:#c7d4f3;box-shadow:0 13px 30px rgba(31,54,96,.08)}
+.howto-step,.guide-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.statnum{font-size:34px;letter-spacing:-1.5px}.scanner-intro{background:linear-gradient(120deg,#fff,#f2f6ff);border-color:#dce5f5}
+.scanner-intro h2{font-size:29px;letter-spacing:-1px}
+.scanner-hint{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0;padding:12px 14px;background:#f0f5ff;border:1px solid #dce6ff;border-radius:12px;color:#536782;font-size:12px}
+.text-action{border:0;background:transparent;color:#315fdb;text-decoration:underline;font-weight:750;padding:2px 0;cursor:pointer}
+.guide-hero{display:grid;grid-template-columns:1fr 240px;align-items:center;gap:20px;padding:34px 38px;background:linear-gradient(115deg,#fff 0%,#f1f5ff 62%,#e8f8f5 100%);border-color:#dce5f5;margin-bottom:17px}
+.guide-hero h2{font-size:clamp(30px,4vw,43px);letter-spacing:-1.8px;margin:12px 0 8px;color:#172943}
+.guide-hero p{max-width:690px;color:#667891;line-height:1.7;margin:0 0 18px}
+.guide-orb{height:180px;display:grid;place-items:center;position:relative}
+.guide-orb-core{width:100px;height:100px;border-radius:30px;display:grid;place-items:center;background:linear-gradient(145deg,#405fe7,#1aa99a);color:white;font-size:29px;font-weight:850;letter-spacing:-2px;box-shadow:0 22px 50px rgba(64,95,231,.25);transform:rotate(-8deg)}
+.guide-orb-ring{position:absolute;width:160px;height:160px;border:1px solid #b8c9e8;border-radius:50%;box-shadow:0 0 0 18px rgba(80,119,185,.045),0 0 0 38px rgba(80,119,185,.03)}
+.guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.guide-card{padding:20px;border:1px solid #e1e7f0;border-radius:16px;background:#fff;min-height:190px}
+.guide-index{display:inline-flex;align-items:center;justify-content:center;width:31px;height:31px;border-radius:10px;background:#edf1ff;color:#405fe7;font-size:11px;font-weight:850;letter-spacing:.5px}
+.guide-card h3{font-size:16px;letter-spacing:-.3px;margin:15px 0 6px;color:#1b2c47}
+.guide-card p{font-size:12px;line-height:1.65;color:#718198;margin:0}
+.guide-mini{display:flex;justify-content:space-between;gap:8px;align-items:center;border-top:1px solid #edf0f5;margin-top:14px;padding-top:11px;color:#8290a3;font-size:10px}
+.guide-mini span{font-weight:750;color:#405f9a}
+.guide-note{margin-top:14px;padding:18px 20px;border:1px solid #dbe7e5;background:#f0faf7;border-radius:15px}
+.guide-note b{font-size:13px;color:#176d5c}.guide-note p{font-size:12px;line-height:1.65;color:#5e7b77;margin:5px 0 0}
+@media(max-width:850px){.main{padding-top:22px}.guide-hero{grid-template-columns:1fr;padding:24px}.guide-orb{display:none}.guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{display:none}}
+@media(max-width:560px){.guide-grid{grid-template-columns:1fr}.guide-card{min-height:0}.hero{border-radius:19px}.stats{gap:9px}.statnum{font-size:27px}.scanner-intro h2{font-size:24px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 </head>
 <body>
@@ -27,6 +66,7 @@ body{background:#f3f6fb;color:#14243a}.shell{grid-template-columns:252px 1fr}.si
 <div class="brand"><div class="mark">T</div><div><strong>TrustLayer</strong><small>Response assurance</small></div></div>
 <div><div class="navlabel">Workspace</div><nav class="nav">
 <button class="active" data-view="overview"><span class="ico">◫</span>Overview</button>
+<button data-view="guide"><span class="ico">?</span>Quick guide</button>
 <button data-view="scanner"><span class="ico">⌕</span>Response scanner</button>
 <button data-view="policies"><span class="ico">▤</span>Company policies</button>
 <button data-view="history"><span class="ico">◷</span>Scan history</button>
@@ -83,9 +123,21 @@ body{background:#f3f6fb;color:#14243a}.shell{grid-template-columns:252px 1fr}.si
 </div>
 </div>
 </section>
+<section class="view" id="guide">
+<div class="guide-hero card"><div><span class="tag green">YOUR 60-SECOND TOUR</span><h2>Know exactly what to do.</h2><p>TrustLayer is a review assistant. It checks draft text for selected warning patterns. It does not approve a response or prove that it is safe.</p><button class="btn primary" id="guideStart">Try a sample check <span aria-hidden="true">→</span></button></div><div class="guide-orb" aria-hidden="true"><div class="guide-orb-core">TL</div><span class="guide-orb-ring"></span></div></div>
+<div class="guide-grid">
+<article class="guide-card"><span class="guide-index">01</span><h3>Open the scanner</h3><p>Choose <b>Response scanner</b> in the left menu, or tap Scanner in the bottom menu on a phone.</p><div class="guide-mini">Where to go <span>Response scanner</span></div></article>
+<article class="guide-card"><span class="guide-index">02</span><h3>Paste or load a sample</h3><p>Use a made-up example first. Avoid real customer details, passwords, payment information, or confidential text.</p><div class="guide-mini">What to enter <span>A draft reply</span></div></article>
+<article class="guide-card"><span class="guide-index">03</span><h3>Run the check</h3><p>Press <b>Analyze response</b>. TrustLayer checks for patterns and policy phrases you have added.</p><div class="guide-mini">What happens <span>Instant rule check</span></div></article>
+<article class="guide-card"><span class="guide-index">04</span><h3>Read the flags</h3><p>Each flag explains what matched. A flag is a reason to review, not proof something is wrong.</p><div class="guide-mini">Your next step <span>Review the wording</span></div></article>
+<article class="guide-card"><span class="guide-index">05</span><h3>Add company rules</h3><p>In Company policies, give a rule a name and enter the exact phrase your team wants flagged.</p><div class="guide-mini">Example <span>“Free for life”</span></div></article>
+<article class="guide-card"><span class="guide-index">06</span><h3>Save your workspace</h3><p>Try the demo first. Create an account only when you want your own workspace, saved policies, and scan history.</p><div class="guide-mini">Optional <span>Create an account</span></div></article>
+</div>
+<div class="guide-note"><b>Important to know</b><p>The current scanner uses lightweight browser-based rules, not an AI model. It can miss risky wording or flag harmless wording. Always have a person review the final response.</p></div>
+</section>
 <section class="view" id="scanner">
-<div class="card scanner-intro"><span class="eyebrow">RESPONSE REVIEW</span><h2>What would you like to check?</h2><p class="sub">Paste a sample AI-generated response below. TrustLayer checks for patterns and exact phrases you have added to your policy library. It does not judge whether a response is true or legally safe.</p><div class="scanner-steps"><span><b>1</b> Paste text</span><span><b>2</b> Run check</span><span><b>3</b> Review each flag</span></div><span class="tag">BROWSER-BASED RULE CHECKS</span></div><div class="card">
-<textarea class="textarea" id="scanText" placeholder="Paste a sample response here..."></textarea><div class="row" style="margin-top:9px"><button class="btn ghost" id="loadScannerExample">Load example text</button></div>
+<div class="card scanner-intro"><span class="eyebrow">RESPONSE REVIEW</span><h2>What would you like to check?</h2><p class="sub">Paste a sample AI-generated response below. TrustLayer checks for patterns and exact phrases you have added to your policy library. It does not judge whether a response is true or legally safe.</p><div class="scanner-steps"><span><b>1</b> Paste text</span><span><b>2</b> Run check</span><span><b>3</b> Review each flag</span></div><div class="scanner-hint"><b>New here?</b> Load the sample to see how a result works. <button class="text-action" id="scannerGuide">Open the quick guide</button></div><span class="tag">BROWSER-BASED RULE CHECKS</span></div><div class="card">
+<textarea class="textarea" id="scanText" placeholder="Paste a sample response here..."></textarea><div class="row" style="margin-top:9px"><button class="btn ghost" id="loadScannerExample">Load sample text</button><button class="btn ghost" id="clearScanner">Clear draft</button></div>
 <div class="row between" style="margin-top:13px"><span class="tiny">Do not paste passwords, payment details, or real personal information.</span><button class="btn primary" id="runScan">Analyze response</button></div>
 <div id="scanResult"></div></div>
 </section>
@@ -100,7 +152,7 @@ body{background:#f3f6fb;color:#14243a}.shell{grid-template-columns:252px 1fr}.si
 </section>
 </main>
 </div>
-<nav class="mobilebar"><button class="active" data-view="overview"><span>◫</span>Overview</button><button data-view="scanner"><span>⌕</span>Scanner</button><button data-view="policies"><span>▤</span>Policies</button><button data-view="history"><span>◷</span>History</button></nav>
+<nav class="mobilebar"><button class="active" data-view="overview"><span>◫</span>Overview</button><button data-view="guide"><span>?</span>Guide</button><button data-view="scanner"><span>⌕</span>Scanner</button><button data-view="policies"><span>▤</span>Policies</button><button data-view="history"><span>◷</span>History</button></nav>
 <div class="authwrap hidden" id="authWrap"><div class="authbox"><button class="btn ghost" id="closeAuth" style="float:right">Back to demo</button><div class="brand"><div class="mark">T</div><div><strong>TrustLayer</strong><small>Response assurance</small></div></div><h2 id="authTitle">Welcome to TrustLayer</h2><p id="authDesc">Sign in to access your workspace, saved policies, and scan history.</p><div class="authswitch" id="authswitch"><button class="btn primary" id="modeSignIn">Sign in</button><button class="btn ghost" id="modeSignUp">Create account</button></div><div class="field" id="orgField" style="display:none"><label for="orgName">Company or workspace name</label><input id="orgName" maxlength="120" placeholder="Your workspace"></div><div class="field"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" placeholder="you@company.com"></div><div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters"></div><button class="btn primary" id="authSubmit" style="width:100%">Sign in</button><div class="notice" id="authNotice" role="status"></div><p class="footnote">Your account is managed by Supabase Auth. Workspace access is protected by database row-level security.</p></div></div>
 <script>
 const SUPABASE_URL="https://vhflqhlcesoxrbqpslyc.supabase.co";
@@ -128,7 +180,7 @@ $("quickScan").onclick=()=>runScan($("quickText").value,$("quickResult"));$("run
 const demoExample="Hello! Your subscription is free for life, and your refund is guaranteed. We will make sure this always works for you.";
 function fillExample(targetId){$(targetId).value=demoExample;$(targetId).focus()}
 $("loadExample").onclick=()=>fillExample("quickText");
-$("loadScannerExample").onclick=()=>fillExample("scanText");
+$("loadScannerExample").onclick=()=>fillExample("scanText");$("clearScanner").onclick=()=>{$("scanText").value="";$("scanResult").innerHTML="";$("scanText").focus()};$("guideStart").onclick=()=>{showView("scanner");fillExample("scanText")};$("scannerGuide").onclick=()=>showView("guide");
 
 $("addPolicy").onclick=async()=>{const title=$("policyTitle").value.trim(),phrase=$("policyPhrase").value.trim();if(!title||!phrase)return alert("Add both a rule name and a phrase.");if(!currentUser||!orgId){policies.unshift({id:"guest-"+Date.now(),title,phrase,enabled:true});$("policyTitle").value="";$("policyPhrase").value="";renderAll();return}const {data,error}=await supabase.from("company_policies").insert({organization_id:orgId,title,phrase,created_by:currentUser.id}).select().single();if(error)return alert(error.message);policies.unshift(data);$("policyTitle").value="";$("policyPhrase").value="";renderAll()};
 async function deletePolicy(id){if(!confirm("Delete this policy phrase?"))return;if(currentUser&&orgId){const {error}=await supabase.from("company_policies").delete().eq("id",id);if(error)return alert(error.message)}policies=policies.filter(p=>p.id!==id);renderAll()}
@@ -169,7 +221,7 @@ $("activateFounder").onclick=async()=>{
 $("refreshFounder").onclick=refreshFounderMetrics;
 function renderAll(){renderPolicies();renderHistory()}
 renderAll();
-function showView(name){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));const titles={overview:"Workspace overview",scanner:"Response scanner",policies:"Company policies",history:"Scan history",founder:"Founder command center"};$("pageTitle").textContent=titles[name]||"Workspace";window.scrollTo({top:0,behavior:"smooth"})}
+function showView(name){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));const titles={overview:"Workspace overview",guide:"Quick guide",scanner:"Response scanner",policies:"Company policies",history:"Scan history",founder:"Founder command center"};$("pageTitle").textContent=titles[name]||"Workspace";window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.goto)));$("refreshHistory").onclick=async()=>{if(!currentUser||!orgId){renderHistory();return}const {data,error}=await supabase.from("scan_history").select("*").eq("organization_id",orgId).order("created_at",{ascending:false}).limit(50);if(error)return alert(error.message);history=data||[];renderHistory()};
 </script>
 </body></html>
